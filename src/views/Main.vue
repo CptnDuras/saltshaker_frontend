@@ -7,13 +7,14 @@
             <shrinkable-menu 
                 :shrink="shrink"
                 @on-change="handleSubmenuChange"
-                :theme="menuTheme" 
+                :theme="menuTheme"
                 :before-push="beforePush"
                 :open-names="openedSubmenuArr"
                 :menu-list="menuList">
                 <div slot="top" class="logo-con">
                     <img v-show="!shrink"  src="../images/logo.png" key="max-logo" />
                     <img v-show="shrink" src="../images/logo-min.png" key="min-logo" />
+                    <font color="#a9a9a9">V1.0</font>
                 </div>
             </shrinkable-menu>
         </div>
@@ -31,7 +32,7 @@
                 </div>
                 <div class="header-avator-con">
                     <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
-                    <lock-screen></lock-screen>
+                    <!--<lock-screen></lock-screen>-->
                     <message-tip v-model="mesCount"></message-tip>
                     <theme-switch></theme-switch>
                     
@@ -58,9 +59,13 @@
         </div>
         <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
             <div class="single-page">
-                <keep-alive :include="cachePage">
-                    <router-view></router-view>
+                <!--<keep-alive :include="cachePage">-->
+                    <!--<router-view></router-view>-->
+                <!--</keep-alive>-->
+                <keep-alive>
+                    <router-view v-if="$route.meta.cached"></router-view>
                 </keep-alive>
+                    <router-view v-if="!$route.meta.cached"></router-view>
             </div>
         </div>
     </div>
@@ -70,7 +75,6 @@
     import tagsPageOpened from './main-components/tags-page-opened.vue';
     import breadcrumbNav from './main-components/breadcrumb-nav.vue';
     import fullScreen from './main-components/fullscreen.vue';
-    import lockScreen from './main-components/lockscreen/lockscreen.vue';
     import messageTip from './main-components/message-tip.vue';
     import themeSwitch from './main-components/theme-switch/theme-switch.vue';
     import Cookies from 'js-cookie';
@@ -82,12 +86,12 @@
             tagsPageOpened,
             breadcrumbNav,
             fullScreen,
-            lockScreen,
             messageTip,
             themeSwitch
         },
         data () {
             return {
+                // 控制左侧菜单栏是否折叠
                 shrink: false,
                 userName: '',
                 isFullScreen: false,
